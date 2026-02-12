@@ -1,0 +1,28 @@
+name: Auto Posting Cron
+
+on:
+  schedule:
+    # 3시간 마다 실행 (UTC 기준 0, 3, 6, 9, 12, 15, 18, 21시)
+    - cron: '0 */3 * * *'
+  workflow_dispatch: # 수동 실행 버튼 추가
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Auto Pilot
+        env:
+          ZAP_HOOK_URL: ${{ secrets.ZAP_HOOK_URL }}
+        run: node auto_pilot.js
