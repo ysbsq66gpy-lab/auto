@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Machine v1.0</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #09090b;
+            --card-bg: #18181b;
+            --text: #fafafa;
+            --accent: #8b5cf6;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-image: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #09090b 100%);
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin: 0;
+            background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.05em;
+        }
+
+        p {
+            color: #71717a;
+            margin-top: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #a1a1aa;
+            font-size: 0.9rem;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid #27272a;
+            background: #09090b;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.4);
+            filter: brightness(1.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #27272a;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        #status {
+            margin-top: 1.5rem;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            display: none;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .loader {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Content Machine</h1>
+            <p>AI 작가에게 블로그 포스팅을 주문하세요.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="topic">포스팅 주제</label>
+            <input type="text" id="topic" placeholder="예: 2026년 AI 트렌드, 삼성전자 주가 전망 등">
+        </div>
+
+        <div class="options">
+            <div class="form-group">
+                <label for="tone">말투 설정</label>
+                <select id="tone">
+                    <option value="전문적이고 신뢰감 있는">전문가 모드</option>
+                    <option value="친근하고 재치 있는">블로거 모드</option>
+                    <option value="짧고 강렬한">뉴스 요약 모드</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="target">타겟 독자</label>
+                <select id="target">
+                    <option value="일반 대중">전체공개</option>
+                    <option value="재테크 초보자">주린이/부린이</option>
+                    <option value="IT 전문가">개발자/IT매니아</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="triggerBtn">
+            <span id="btnText">포스팅 생성 및 발행하기</span>
+            <div class="loader" id="loader"></div>
+        </button>
+
+        <div id="status"></div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('triggerBtn');
+        const btnText = document.getElementById('btnText');
+        const loader = document.getElementById('loader');
+        const status = document.getElementById('status');
+        const topicInput = document.getElementById('topic');
+        const toneSelect = document.getElementById('tone');
+        const targetSelect = document.getElementById('target');
+
+        btn.addEventListener('click', async () => {
+            if (!topicInput.value) {
+                alert('주제를 입력해주세요!');
+                return;
+            }
+
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            loader.style.display = 'block';
+            status.style.display = 'none';
+
+            try {
+                const response = await fetch('/trigger-zap', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: topicInput.value,
+                        tone: toneSelect.value,
+                        target: targetSelect.value
+                    })
+                });
+
+                const data = await response.json();
+
+                status.style.display = 'block';
+                if (data.success) {
+                    status.className = 'success';
+                    status.innerHTML = `✨ <strong>성공!</strong><br>AI가 글을 작성하여 발행 프로세스를 시작했습니다.`;
+                } else {
+                    status.className = 'error';
+                    status.textContent = '❌ 오류: ' + data.error;
+                }
+            } catch (err) {
+                status.style.display = 'block';
+                status.className = 'error';
+                status.textContent = '❌ 서버와 연결할 수 없습니다.';
+            } finally {
+                btn.disabled = false;
+                btnText.style.display = 'block';
+                loader.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
